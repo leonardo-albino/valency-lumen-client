@@ -1,5 +1,5 @@
 [package]
-name = "valency-lumen-portable-packer"
+name = "rustdesk-portable-packer"
 version = "1.4.6"
 edition = "2021"
 description = "Valency Lumen Remote Desktop"
