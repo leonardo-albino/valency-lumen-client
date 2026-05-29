@@ -112,6 +112,11 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         },
       ),
       buildPluginEntry(),
+      // Valency Lumen: footer block
+      Align(
+        alignment: Alignment.center,
+        child: loadValencyFooter(),
+      ),
     ];
     if (isIncomingOnly) {
       children.addAll([

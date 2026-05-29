@@ -3713,37 +3713,37 @@ Widget loadPowered(BuildContext context) {
   ).marginOnly(top: 6);
 }
 
-// max 300 x 60
+// Valency Lumen: header logo block (escudo + texto VALENCY LUMEN)
 Widget loadLogo() {
-  return FutureBuilder<ByteData>(
-      future: rootBundle.load('assets/logo.png'),
-      builder: (BuildContext context, AsyncSnapshot<ByteData> snapshot) {
-        if (snapshot.hasData) {
-          final image = Image.asset(
-            'assets/logo.png',
-            fit: BoxFit.contain,
-            errorBuilder: (ctx, error, stackTrace) {
-              return Container();
-            },
-          );
-          return Container(
-            constraints: BoxConstraints(maxWidth: 300, maxHeight: 60),
-            child: image,
-          ).marginOnly(left: 12, right: 12, top: 12);
-        }
-        return const Offstage();
-      });
+  return Container(
+    constraints: BoxConstraints(maxWidth: 300, maxHeight: 70),
+    child: Image.asset(
+      'assets/valency-lumen-header.png',
+      fit: BoxFit.contain,
+      errorBuilder: (ctx, error, stackTrace) => Container(),
+    ),
+  ).marginOnly(left: 12, right: 12, top: 12, bottom: 8);
+}
+
+// Valency Lumen: footer block "Desenvolvido por Valency Smart Tech..."
+Widget loadValencyFooter() {
+  return Container(
+    constraints: BoxConstraints(maxWidth: 320, maxHeight: 60),
+    child: Image.asset(
+      'assets/valency-lumen-footer.png',
+      fit: BoxFit.contain,
+      errorBuilder: (ctx, error, stackTrace) => Container(),
+    ),
+  ).marginOnly(left: 12, right: 12, top: 8, bottom: 12);
 }
 
 Widget loadIcon(double size) {
-  return Image.asset('assets/icon.png',
-      width: size,
-      height: size,
-      errorBuilder: (ctx, error, stackTrace) => SvgPicture.asset(
-            'assets/icon.svg',
-            width: size,
-            height: size,
-          ));
+  // Valency Lumen: shield icon as tab/title bar icon
+  return SvgPicture.asset(
+    'assets/valency-shield.svg',
+    width: size,
+    height: size,
+  );
 }
 
 var imcomingOnlyHomeSize = Size(280, 300);
