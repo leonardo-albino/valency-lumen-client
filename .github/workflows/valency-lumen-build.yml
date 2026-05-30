@@ -15,7 +15,7 @@ env:
   FLUTTER_RUST_BRIDGE_VERSION: "1.80.1"
   VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
   VCPKG_COMMIT_ID: "120deac3062162151622ca4860575a33844ba10b"
-  VERSION: "1.0.5"
+  VERSION: "1.0.6"
   # Valency Lumen build-time secrets (forwarded to Rust via option_env!)
   RS_PUB_KEY: ${{ secrets.RS_PUB_KEY }}
   RENDEZVOUS_SERVER: ${{ secrets.RENDEZVOUS_SERVER }}

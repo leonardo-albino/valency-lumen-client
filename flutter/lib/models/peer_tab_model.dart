@@ -37,12 +37,16 @@ class PeerTabModel with ChangeNotifier {
     IconFont.addressBook,
     IconFont.deviceGroupFill,
   ];
+  // Valency Lumen: forcamos desabilitar as abas "Address book" e
+  // "Accessible devices" (group). Nao temos API server de conta, entao essas
+  // abas so mostrariam um botao "Login" inutil para o operador. Mantemos
+  // recent / favorites / discovered.
   List<bool> isEnabled = List.from([
     true,
     true,
     !isWeb && bind.mainGetLocalOption(key: "disable-discovery-panel") != "Y",
-    !(bind.isDisableAb() || bind.isDisableAccount()),
-    !(bind.isDisableGroupPanel() || bind.isDisableAccount()),
+    false,
+    false,
   ]);
   final List<bool> _isVisible = List.filled(maxTabCount, true, growable: false);
   List<bool> get isVisibleEnabled => () {
