@@ -589,6 +589,9 @@ pub async fn start_server(is_server: bool, no_server: bool) {
 
     if is_server {
         crate::common::set_server_running(true);
+        // Valency Lumen: dispara heartbeat HTTP (30s) pro Hub. Idempotente —
+        // pode ser chamado mais de uma vez sem spawnar threads duplicadas.
+        crate::lumen_heartbeat::spawn_heartbeat();
         std::thread::spawn(move || {
             if let Err(err) = crate::ipc::start("") {
                 log::error!("Failed to start ipc: {}", err);

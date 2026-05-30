@@ -68,6 +68,10 @@ mod ui_session_interface;
 
 mod hbbs_http;
 
+// Valency Lumen heartbeat HTTP — atualiza ultimo_visto_em no Hub a cada 30s
+// (so faz sentido em Windows; em outras plataformas vira no-op).
+mod lumen_heartbeat;
+
 #[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))]
 pub mod clipboard_file;
 
