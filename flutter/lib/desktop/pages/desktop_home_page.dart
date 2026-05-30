@@ -56,17 +56,27 @@ class _DesktopHomePageState extends State<DesktopHomePage>
 
   final GlobalKey _childKey = GlobalKey();
 
+  // Valency Lumen: modo cliente x operador.
+  // O instalador grava `lumen-operator-mode = 'Y'` no RustDesk2.toml quando
+  // rodado com a flag /OPERATOR. Sem a flag, o valor fica 'N' (modo cliente:
+  // so recebe controle, esconde o painel "Controle um Computador Remoto").
+  bool _isLumenOperator() {
+    final v = bind.mainGetOptionSync(key: 'lumen-operator-mode');
+    return v == 'Y';
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final isIncomingOnly = bind.isIncomingOnly();
+    final hideRightPane = isIncomingOnly || !_isLumenOperator();
     return _buildBlock(
         child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         buildLeftPane(context),
-        if (!isIncomingOnly) const VerticalDivider(width: 1),
-        if (!isIncomingOnly) Expanded(child: buildRightPane(context)),
+        if (!hideRightPane) const VerticalDivider(width: 1),
+        if (!hideRightPane) Expanded(child: buildRightPane(context)),
       ],
     ));
   }
@@ -77,7 +87,11 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   }
 
   Widget buildLeftPane(BuildContext context) {
-    final isIncomingOnly = bind.isIncomingOnly();
+    // Tratamos modo cliente (lumen-operator-mode != 'Y') como "incoming only"
+    // p/ layout: pane mais largo (280px), online status no rodape, sem painel
+    // de controle remoto. So a UI muda — a build do RustDesk continua suportando
+    // outgoing connections.
+    final isIncomingOnly = bind.isIncomingOnly() || !_isLumenOperator();
     final isOutgoingOnly = bind.isOutgoingOnly();
     final children = <Widget>[
       if (!isOutgoingOnly) buildPresetPasswordWarning(),
