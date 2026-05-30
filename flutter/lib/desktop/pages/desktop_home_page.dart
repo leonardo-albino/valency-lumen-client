@@ -105,7 +105,11 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         ),
       buildTip(context),
       if (!isOutgoingOnly) buildIDBoard(context),
-      if (!isOutgoingOnly) buildPasswordBoard(context),
+      // Valency Lumen: bloco "Senha de uso unico" so faz sentido em modo
+      // operador (computador local pode aceitar conexoes). No modo cliente
+      // (default) escondemos a senha e mantemos apenas o ID visivel —
+      // cliente passa o ID se houver fallback manual.
+      if (!isOutgoingOnly && _isLumenOperator()) buildPasswordBoard(context),
       FutureBuilder<Widget>(
         future: Future.value(
             Obx(() => buildHelpCards(stateGlobal.updateUrl.value))),
