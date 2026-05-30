@@ -3713,28 +3713,27 @@ Widget loadPowered(BuildContext context) {
   ).marginOnly(top: 6);
 }
 
-// Valency Lumen: header logo block (escudo + texto VALENCY LUMEN)
+// Valency Lumen: header logo - escondido (consolidado no footer)
 Widget loadLogo() {
-  return Container(
-    constraints: BoxConstraints(maxWidth: 300, maxHeight: 70),
-    child: Image.asset(
-      'assets/valency-lumen-header.png',
-      fit: BoxFit.contain,
-      errorBuilder: (ctx, error, stackTrace) => Container(),
-    ),
-  ).marginOnly(left: 12, right: 12, top: 12, bottom: 8);
+  return const SizedBox.shrink();
 }
 
-// Valency Lumen: footer block "Desenvolvido por Valency Smart Tech..."
+// Valency Lumen: bloco rodape consolidado (logo escudo + VALENCY/LUMEN +
+// "Desenvolvido por Valency Smart Tech" + "Solucoes Para Uma Gestao Mais
+// Inteligente"). Renderiza centralizado ocupando a largura disponivel da
+// sidebar com altura maxima limitada pra nao engolir a janela.
 Widget loadValencyFooter() {
-  return Container(
-    constraints: BoxConstraints(maxWidth: 320, maxHeight: 60),
-    child: Image.asset(
-      'assets/valency-lumen-footer.png',
-      fit: BoxFit.contain,
-      errorBuilder: (ctx, error, stackTrace) => Container(),
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: 240),
+      child: Image.asset(
+        'assets/valency-lumen-footer.png',
+        fit: BoxFit.contain,
+        errorBuilder: (ctx, error, stackTrace) => Container(),
+      ),
     ),
-  ).marginOnly(left: 12, right: 12, top: 8, bottom: 12);
+  );
 }
 
 Widget loadIcon(double size) {

@@ -15,7 +15,7 @@ env:
   FLUTTER_RUST_BRIDGE_VERSION: "1.80.1"
   VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
   VCPKG_COMMIT_ID: "120deac3062162151622ca4860575a33844ba10b"
-  VERSION: "1.0.1"
+  VERSION: "1.0.3"
   # Valency Lumen build-time secrets (forwarded to Rust via option_env!)
   RS_PUB_KEY: ${{ secrets.RS_PUB_KEY }}
   RENDEZVOUS_SERVER: ${{ secrets.RENDEZVOUS_SERVER }}
@@ -86,6 +86,9 @@ jobs:
     name: Build Valency Lumen (windows-x86_64)
     needs: [generate-bridge]
     runs-on: windows-2022
+    # Necessario p/ softprops/action-gh-release criar release na tag
+    permissions:
+      contents: write
     steps:
       - name: Export GitHub Actions cache environment variables
         uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410

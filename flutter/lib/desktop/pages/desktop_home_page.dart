@@ -93,6 +93,9 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     // outgoing connections.
     final isIncomingOnly = bind.isIncomingOnly() || !_isLumenOperator();
     final isOutgoingOnly = bind.isOutgoingOnly();
+    // Valency Lumen: header removido — branding consolidado no rodape
+    // (loadLogo retorna SizedBox.shrink, mantemos referencia pra
+    // compatibilidade caso alguma build personalizada use).
     final children = <Widget>[
       if (!isOutgoingOnly) buildPresetPasswordWarning(),
       if (bind.isCustomClient())
@@ -100,10 +103,6 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           alignment: Alignment.center,
           child: loadPowered(context),
         ),
-      Align(
-        alignment: Alignment.center,
-        child: loadLogo(),
-      ),
       buildTip(context),
       if (!isOutgoingOnly) buildIDBoard(context),
       if (!isOutgoingOnly) buildPasswordBoard(context),
@@ -126,11 +125,6 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         },
       ),
       buildPluginEntry(),
-      // Valency Lumen: footer block
-      Align(
-        alignment: Alignment.center,
-        child: loadValencyFooter(),
-      ),
     ];
     if (isIncomingOnly) {
       children.addAll([
@@ -163,7 +157,10 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                     children: children,
                   ),
                 ),
-                Expanded(child: Container())
+                Expanded(child: Container()),
+                // Valency Lumen: rodape consolidado (logo + VALENCY/LUMEN +
+                // taglines) ancorado no fim da sidebar.
+                loadValencyFooter(),
               ],
             ),
             if (isOutgoingOnly)
