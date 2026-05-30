@@ -153,6 +153,10 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     return ChangeNotifierProvider.value(
       value: gFFI.serverModel,
       child: Container(
+        // Valency Lumen: largura da sidebar.
+        //  - Modo cliente (incoming-only): 280px, casa com a janela 300x700
+        //    do modo cliente (300 - 11 margem Win - alguma respiracao).
+        //  - Modo operador: 200px (default RustDesk, sidebar + painel direito).
         width: isIncomingOnly ? 280.0 : 200.0,
         color: Theme.of(context).colorScheme.background,
         child: Stack(
@@ -884,26 +888,32 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     });
     _uniLinksSubscription = listenUniLinks();
 
-    if (bind.isIncomingOnly()) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _updateWindowSize();
-      });
-    }
+    // Valency Lumen: forca tamanho de janela conforme modo.
+    //  - Cliente (lumen-operator-mode != 'Y'): 300x700 fixo (compacto).
+    //  - Operador (lumen-operator-mode == 'Y'): 840x600 (default + painel).
+    // O `_updateWindowSize()` original do RustDesk so era chamado em builds
+    // incoming-only (conn-type=incoming no TOML); como nao usamos esse flag,
+    // forcamos o setSize aqui pra cada modo.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final isOperator = _isLumenOperator();
+      final size = isOperator ? const Size(840, 600) : const Size(300, 700);
+      // Em modo cliente queremos travar resizable=false pra manter a UI
+      // compacta (cliente nao precisa redimensionar). Operador mantem o
+      // comportamento default (resizable).
+      await windowManager.setSize(size);
+      if (!isOperator) {
+        await windowManager.setResizable(false);
+      }
+    });
     WidgetsBinding.instance.addObserver(this);
   }
 
   _updateWindowSize() {
-    RenderObject? renderObject = _childKey.currentContext?.findRenderObject();
-    if (renderObject == null) {
-      return;
-    }
-    if (renderObject is RenderBox) {
-      final size = renderObject.size;
-      if (size != imcomingOnlyHomeSize) {
-        imcomingOnlyHomeSize = size;
-        windowManager.setSize(getIncomingOnlyHomeSize());
-      }
-    }
+    // Valency Lumen: o tamanho da janela e fixo por modo (300x700 cliente,
+    // 840x600 operador) e ja setado em initState. Nao reagimos ao tamanho
+    // renderizado pra evitar "tremidinha" e janela mudando de altura quando
+    // cards aparecem/desaparecem.
+    return;
   }
 
   @override

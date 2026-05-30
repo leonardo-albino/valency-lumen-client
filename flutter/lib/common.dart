@@ -3728,18 +3728,19 @@ Widget loadLogo() {
   );
 }
 
-// Valency Lumen: bloco rodape consolidado (logo escudo + VALENCY/LUMEN +
-// "Desenvolvido por Valency Smart Tech" + "Solucoes Para Uma Gestao Mais
-// Inteligente"). Renderiza centralizado ocupando a largura disponivel da
-// sidebar com altura maxima limitada pra nao engolir a janela.
+// Valency Lumen: rodape minimalista (texto "Desenvolvido por Valency Smart
+// Tech / Solucoes Para Uma Gestao Mais Inteligente" + escudo pequeno roxo).
+// PNG na proporcao 800x150 (~5.3:1). Com largura da sidebar de 360px, a
+// altura renderizada fica ~68px — limitamos maxHeight pra evitar estouro
+// caso a largura aumente em layouts futuros.
 Widget loadValencyFooter() {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     child: ConstrainedBox(
-      constraints: const BoxConstraints(maxHeight: 200),
+      constraints: const BoxConstraints(maxHeight: 80),
       child: Image.asset(
         'assets/valency-lumen-footer.png',
-        fit: BoxFit.contain,
+        fit: BoxFit.fitWidth,
         errorBuilder: (ctx, error, stackTrace) => Container(),
       ),
     ),
@@ -3805,7 +3806,25 @@ Widget loadIcon(double size) {
   );
 }
 
-var imcomingOnlyHomeSize = Size(280, 300);
+// Valency Lumen: tamanho inicial da janela.
+//  - Modo cliente (lumen-operator-mode != 'Y'): 300x700, compacto, focado
+//    em "Pronto pra Receber Suporte" — header + ID + Suporte + footer.
+//  - Modo operador (lumen-operator-mode == 'Y'): 840x600, default RustDesk
+//    com painel completo de controle remoto (so o operador usa).
+// Tratamos modo cliente como incoming-only no layout (sem painel direito),
+// entao essa Size eh consumida via getIncomingOnlyHomeSize() abaixo.
+bool _isLumenOperatorMode() {
+  return bind.mainGetOptionSync(key: 'lumen-operator-mode') == 'Y';
+}
+
+Size _computeLumenHomeSize() {
+  if (_isLumenOperatorMode()) {
+    return Size(840, 600);
+  }
+  return Size(300, 700);
+}
+
+var imcomingOnlyHomeSize = _computeLumenHomeSize();
 Size getIncomingOnlyHomeSize() {
   final magicWidth = isWindows ? 11.0 : 2.0;
   final magicHeight = 10.0;
