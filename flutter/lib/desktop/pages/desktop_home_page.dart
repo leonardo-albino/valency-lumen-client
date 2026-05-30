@@ -93,11 +93,12 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     // outgoing connections.
     final isIncomingOnly = bind.isIncomingOnly() || !_isLumenOperator();
     final isOutgoingOnly = bind.isOutgoingOnly();
-    // Valency Lumen: header removido — branding consolidado no rodape
-    // (loadLogo retorna SizedBox.shrink, mantemos referencia pra
-    // compatibilidade caso alguma build personalizada use).
+    final isOperator = _isLumenOperator();
+    // Valency Lumen: header (escudo + VALENCY LUMEN) renderizado no topo
+    // da sidebar. Footer consolidado continua ancorado no fim.
     final children = <Widget>[
       if (!isOutgoingOnly) buildPresetPasswordWarning(),
+      loadLogo(),
       if (bind.isCustomClient())
         Align(
           alignment: Alignment.center,
@@ -109,7 +110,11 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       // operador (computador local pode aceitar conexoes). No modo cliente
       // (default) escondemos a senha e mantemos apenas o ID visivel —
       // cliente passa o ID se houver fallback manual.
-      if (!isOutgoingOnly && _isLumenOperator()) buildPasswordBoard(context),
+      if (!isOutgoingOnly && isOperator) buildPasswordBoard(context),
+      // Valency Lumen: bloco de suporte (agendamentos + WhatsApp) — so
+      // mostrado no modo cliente, pra que o usuario final saiba como pedir
+      // ajuda. Operador nao precisa, ja sabe como acionar suporte interno.
+      if (!isOutgoingOnly && !isOperator) loadValencySupportInfo(),
       FutureBuilder<Widget>(
         future: Future.value(
             Obx(() => buildHelpCards(stateGlobal.updateUrl.value))),
@@ -410,6 +415,13 @@ class _DesktopHomePageState extends State<DesktopHomePage>
 
   buildTip(BuildContext context) {
     final isOutgoingOnly = bind.isOutgoingOnly();
+    final isOperator = _isLumenOperator();
+    // Valency Lumen: no modo cliente nao mostramos a senha (so o ID), entao
+    // o "desk_tip" mencionando "ID e senha" fica incoerente. Substituimos
+    // por uma variante "so ID" — operador mantem o texto original.
+    final tipText = !isOperator
+        ? translate("desk_tip_id_only")
+        : translate("desk_tip");
     return Padding(
       padding:
           const EdgeInsets.only(left: 20.0, right: 16, top: 16.0, bottom: 5),
@@ -434,7 +446,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           ),
           if (!isOutgoingOnly)
             Text(
-              translate("desk_tip"),
+              tipText,
               overflow: TextOverflow.clip,
               style: Theme.of(context).textTheme.bodySmall,
             ),

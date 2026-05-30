@@ -3713,9 +3713,19 @@ Widget loadPowered(BuildContext context) {
   ).marginOnly(top: 6);
 }
 
-// Valency Lumen: header logo - escondido (consolidado no footer)
+// Valency Lumen: header logo - escudo + VALENCY LUMEN no topo da sidebar.
 Widget loadLogo() {
-  return const SizedBox.shrink();
+  return Padding(
+    padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 4),
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: 56),
+      child: Image.asset(
+        'assets/valency-lumen-header.png',
+        fit: BoxFit.contain,
+        errorBuilder: (ctx, error, stackTrace) => const SizedBox.shrink(),
+      ),
+    ),
+  );
 }
 
 // Valency Lumen: bloco rodape consolidado (logo escudo + VALENCY/LUMEN +
@@ -3726,11 +3736,61 @@ Widget loadValencyFooter() {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     child: ConstrainedBox(
-      constraints: const BoxConstraints(maxHeight: 240),
+      constraints: const BoxConstraints(maxHeight: 200),
       child: Image.asset(
         'assets/valency-lumen-footer.png',
         fit: BoxFit.contain,
         errorBuilder: (ctx, error, stackTrace) => Container(),
+      ),
+    ),
+  );
+}
+
+// Valency Lumen: bloco de informacoes de suporte (agendamento e WhatsApp).
+// Mostrado entre o ID e o footer pra que clientes saibam como pedir ajuda.
+Widget loadValencySupportInfo() {
+  return Padding(
+    padding: const EdgeInsets.only(left: 20, right: 16, top: 12, bottom: 4),
+    child: Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: const Color(0xFF0071FF).withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text(
+            'Suporte',
+            style: TextStyle(
+              color: Color(0xFF0071FF),
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+            ),
+          ),
+          SizedBox(height: 6),
+          Text(
+            'Agendamentos:',
+            style: TextStyle(fontSize: 11),
+          ),
+          Text(
+            'suporte.valency.net.br',
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+          ),
+          SizedBox(height: 4),
+          Text(
+            'WhatsApp:',
+            style: TextStyle(fontSize: 11),
+          ),
+          Text(
+            '(63) 9 8155-5555',
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+          ),
+        ],
       ),
     ),
   );
